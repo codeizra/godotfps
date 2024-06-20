@@ -9,6 +9,7 @@ extends CharacterBody3D
 @onready var ray_cast_3d = $RayCast3D
 @onready var camera_3d = $neck/head/eyes/Camera3D
 @onready var animation_player = $neck/head/eyes/AnimationPlayer
+@onready var weapon_holder = $neck/head/eyes/weaponholder
 
 # Speed vars
 var currentSPEED = 3.5
@@ -46,29 +47,46 @@ var slide_speed = 10.0
 const head_bobbing_sprinting_speed = 22.0
 const head_bobbing_walking_speed = 14.0
 const head_bobbing_crouching_speed = 10.0
+const weapon_bobbing_speed = 10.0
 
 const head_bobbing_sprinting_intensity = 0.2
 const head_bobbing_walking_intensity = 0.1
 const head_bobbing_crouching_intensity = 0.05
+const weapon_bobbing_intensity = 0.01
 
 var head_bobbing_current_intensity = 0.0
+var weapon_bobbing_current_intensity = 0.0
 
 var head_bobbing_vector = Vector2.ZERO
 var head_bobbing_index = 0.0
+var weapon_bobbing_vector = Vector2.ZERO
+var weapon_bobbing_index = 0.0
 
 # Input vars
 var direction = Vector3.ZERO
 const mouse_sens = 0.2
+
+# Weapon sway vars
+@export var weapon_sway_amount = 5
+@export var weapon_rotation_amount = 1
+@export var invert_weapon_sway = false
+
+var def_weapon_holder_pos = Vector3.ZERO
+var def_weapon_holder_rot = Vector3.ZERO
+var mouse_input = Vector2.ZERO
 
 # Get the gravity from the project settings to be synced with RigidBody nodes.
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready():
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+	def_weapon_holder_pos = weapon_holder.position
+	def_weapon_holder_rot = weapon_holder.rotation
 
 func _input(event):
 	# Mouse Movement-Looking Logic
 	if event is InputEventMouseMotion:
+		mouse_input = event.relative
 		if free_looking:
 			neck.rotate_y(deg_to_rad(-event.relative.x * mouse_sens))
 			neck.rotation.y = clamp(neck.rotation.y, deg_to_rad(-120), deg_to_rad(120))
@@ -78,7 +96,6 @@ func _input(event):
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
 
 func _physics_process(delta):
-	
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir = Vector2()
 	if Input.is_action_pressed("forward"):
@@ -111,6 +128,7 @@ func _physics_process(delta):
 			sliding = false
 			velocity.y = JUMP_VELOCITY
 			animation_player.play("jump")
+			print("slide cancelled")
 		
 		walking = false
 		sprinting = false
@@ -168,22 +186,34 @@ func _physics_process(delta):
 	if sprinting:
 		head_bobbing_current_intensity = head_bobbing_sprinting_intensity
 		head_bobbing_index += head_bobbing_sprinting_speed * delta
+		weapon_bobbing_current_intensity = weapon_bobbing_intensity
+		weapon_bobbing_index += weapon_bobbing_speed * delta
 	elif walking:
 		head_bobbing_current_intensity = head_bobbing_walking_intensity
 		head_bobbing_index += head_bobbing_walking_speed * delta
+		weapon_bobbing_current_intensity = weapon_bobbing_intensity
+		weapon_bobbing_index += weapon_bobbing_speed * delta
 	elif crouching:
 		head_bobbing_current_intensity = head_bobbing_crouching_intensity
 		head_bobbing_index += head_bobbing_crouching_speed * delta
+		weapon_bobbing_current_intensity = weapon_bobbing_intensity
+		weapon_bobbing_index += weapon_bobbing_speed * delta
 	
 	if is_on_floor() and not sliding and input_dir != Vector2.ZERO:
 		head_bobbing_vector.y = sin(head_bobbing_index)
-		head_bobbing_vector.x = sin(head_bobbing_index/2) + 0.5
+		head_bobbing_vector.x = sin(head_bobbing_index / 2) + 0.5
+		weapon_bobbing_vector.y = sin(weapon_bobbing_index)
+		weapon_bobbing_vector.x = sin(weapon_bobbing_index / 2) + 0.5
 		
-		eyes.position.y = lerp(eyes.position.y, head_bobbing_vector.y * (head_bobbing_current_intensity/2.0), delta * lerp_speed)
+		eyes.position.y = lerp(eyes.position.y, head_bobbing_vector.y * (head_bobbing_current_intensity / 2.0), delta * lerp_speed)
 		eyes.position.x = lerp(eyes.position.x, head_bobbing_vector.x * head_bobbing_current_intensity, delta * lerp_speed)
+		weapon_holder.position.y = lerp(weapon_holder.position.y, def_weapon_holder_pos.y + weapon_bobbing_vector.y * (weapon_bobbing_current_intensity / 2.0), 10 * delta)
+		weapon_holder.position.x = lerp(weapon_holder.position.x, def_weapon_holder_pos.x + weapon_bobbing_vector.x * weapon_bobbing_current_intensity, 10 * delta)
 	else:
 		eyes.position.y = lerp(eyes.position.y, 0.0, delta * lerp_speed)
 		eyes.position.x = lerp(eyes.position.x, 0.0, delta * lerp_speed)
+		weapon_holder.position.y = lerp(weapon_holder.position.y, def_weapon_holder_pos.y, 10 * delta)
+		weapon_holder.position.x = lerp(weapon_holder.position.x, def_weapon_holder_pos.x, 10 * delta)
 	
 	# Handle jump
 	if Input.is_action_just_pressed("jump") and is_on_floor():
@@ -199,8 +229,6 @@ func _physics_process(delta):
 		elif last_velocity.y < -4.0:
 			animation_player.play("landing")
 			
-		
-
 	if is_on_floor():
 		direction = lerp(direction, (transform.basis * Vector3(input_dir.x, 0, input_dir.y)).normalized(), delta * lerp_speed)
 	else:
@@ -222,3 +250,4 @@ func _physics_process(delta):
 	last_velocity = velocity
 	
 	move_and_slide()
+

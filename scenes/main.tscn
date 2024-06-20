@@ -1,9 +1,10 @@
-[gd_scene load_steps=18 format=3 uid="uid://bpvxd63udyl6"]
+[gd_scene load_steps=19 format=3 uid="uid://bpvxd63udyl6"]
 
 [ext_resource type="Texture2D" uid="uid://c0ekv32bi6dsl" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_1x5a0"]
 [ext_resource type="Texture2D" uid="uid://cd15h8ea6u3cf" path="res://assets/textures/dev/grids/Orange/texture_05.png" id="2_lnloc"]
 [ext_resource type="Texture2D" uid="uid://cuna2vkch25fu" path="res://assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_mikkt"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="3_necqg"]
+[ext_resource type="PackedScene" uid="uid://tq7k73lu7615" path="res://assets/pistol_animated/scene.gltf" id="5_t3yp8"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5k2gv"]
 albedo_texture = ExtResource("1_1x5a0")
@@ -308,3 +309,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 libraries = {
 "": SubResource("AnimationLibrary_26q4a")
 }
+
+[node name="weaponholder" type="Node3D" parent="player/neck/head/eyes"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.06, -0.2, -0.045)
+
+[node name="Sketchfab_Scene" parent="player/neck/head/eyes/weaponholder" instance=ExtResource("5_t3yp8")]
