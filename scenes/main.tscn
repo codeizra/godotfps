@@ -326,7 +326,7 @@ grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 1
 
-[node name="reticle" type="CenterContainer" parent="player/UserInterface"]
+[node name="reticle" type="CenterContainer" parent="player/UserInterface" node_paths=PackedStringArray("RETICLE_LINES", "PLAYER_CONTROLLER")]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -340,6 +340,9 @@ offset_bottom = 20.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("6_84a87")
+RETICLE_LINES = [NodePath("top"), NodePath("right"), NodePath("left"), NodePath("bottom")]
+PLAYER_CONTROLLER = NodePath("../..")
+RETICLE_DISTANCE = 5.0
 
 [node name="top" type="Line2D" parent="player/UserInterface/reticle"]
 points = PackedVector2Array(0, -5, 0, -15)
