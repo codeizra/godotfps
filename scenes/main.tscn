@@ -1,10 +1,11 @@
-[gd_scene load_steps=19 format=3 uid="uid://bpvxd63udyl6"]
+[gd_scene load_steps=20 format=3 uid="uid://bpvxd63udyl6"]
 
 [ext_resource type="Texture2D" uid="uid://c0ekv32bi6dsl" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_1x5a0"]
 [ext_resource type="Texture2D" uid="uid://cd15h8ea6u3cf" path="res://assets/textures/dev/grids/Orange/texture_05.png" id="2_lnloc"]
 [ext_resource type="Texture2D" uid="uid://cuna2vkch25fu" path="res://assets/hdris/kloofendal_48d_partly_cloudy_puresky_2k.hdr" id="2_mikkt"]
 [ext_resource type="Script" path="res://scripts/player.gd" id="3_necqg"]
 [ext_resource type="PackedScene" uid="uid://tq7k73lu7615" path="res://assets/pistol_animated/scene.gltf" id="5_t3yp8"]
+[ext_resource type="Script" path="res://scripts/reticle.gd" id="6_84a87"]
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_5k2gv"]
 albedo_texture = ExtResource("1_1x5a0")
@@ -295,6 +296,7 @@ disabled = true
 
 [node name="RayCast3D" type="RayCast3D" parent="player"]
 target_position = Vector3(0, 2, 0)
+collide_with_areas = true
 
 [node name="neck" type="Node3D" parent="player"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
@@ -314,3 +316,43 @@ libraries = {
 transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.06, -0.2, -0.045)
 
 [node name="Sketchfab_Scene" parent="player/neck/head/eyes/weaponholder" instance=ExtResource("5_t3yp8")]
+
+[node name="UserInterface" type="Control" parent="player"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+
+[node name="reticle" type="CenterContainer" parent="player/UserInterface"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_84a87")
+
+[node name="top" type="Line2D" parent="player/UserInterface/reticle"]
+points = PackedVector2Array(0, -5, 0, -15)
+width = 2.0
+
+[node name="right" type="Line2D" parent="player/UserInterface/reticle"]
+points = PackedVector2Array(5, 0, 15, 0)
+width = 2.0
+
+[node name="left" type="Line2D" parent="player/UserInterface/reticle"]
+points = PackedVector2Array(-5, 0, -15, 0)
+width = 2.0
+
+[node name="bottom" type="Line2D" parent="player/UserInterface/reticle"]
+points = PackedVector2Array(0, 5, 0, 15)
+width = 2.0
