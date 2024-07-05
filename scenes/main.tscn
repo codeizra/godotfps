@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://bpvxd63udyl6"]
+[gd_scene load_steps=23 format=3 uid="uid://bpvxd63udyl6"]
 
 [ext_resource type="Texture2D" uid="uid://c0ekv32bi6dsl" path="res://assets/textures/dev/grids/Dark/texture_07.png" id="1_1x5a0"]
 [ext_resource type="Texture2D" uid="uid://cd15h8ea6u3cf" path="res://assets/textures/dev/grids/Orange/texture_05.png" id="2_lnloc"]
@@ -149,12 +149,41 @@ tracks/1/keys = {
 "values": [Vector3(0, 0, 0), Vector3(0, -0.5, 0), Vector3(0, -0.25, 0), Vector3(0, -0.1, 0), Vector3(0, 0, 0)]
 }
 
+[sub_resource type="Animation" id="Animation_4hyh1"]
+resource_name = "sliding"
+length = 5.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("../../../RayCast3D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0, 0, 0), Vector3(0, 0, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Camera3D:fov")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 4.3),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [75.0, 85.0, 75.0]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_26q4a"]
 _data = {
 "RESET": SubResource("Animation_u28yh"),
 "jump": SubResource("Animation_ad87e"),
 "landing": SubResource("Animation_7s462"),
-"roll": SubResource("Animation_iyp2s")
+"roll": SubResource("Animation_iyp2s"),
+"sliding": SubResource("Animation_4hyh1")
 }
 
 [node name="world" type="Node3D"]
@@ -225,7 +254,7 @@ size = Vector3(5, 0.2, 1)
 material = SubResource("StandardMaterial3D_4lr5g")
 
 [node name="CSGBox3D10" type="CSGBox3D" parent="stage/CSGBox3D3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.71324, 1.15959, -2.07288)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5.24717, 1.15959, -2.07288)
 size = Vector3(5, 0.2, 1)
 material = SubResource("StandardMaterial3D_4lr5g")
 
@@ -297,6 +326,7 @@ shape = SubResource("CapsuleShape3D_q3gnd")
 disabled = true
 
 [node name="RayCast3D" type="RayCast3D" parent="player"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 target_position = Vector3(0, 2, 0)
 collide_with_areas = true
 

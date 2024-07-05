@@ -64,6 +64,7 @@ var weapon_bobbing_index = 0.0
 
 # Input vars
 var direction = Vector3.ZERO
+var mouse_delta = Vector2()
 const mouse_sens = 0.2
 
 # Weapon sway vars
@@ -86,6 +87,7 @@ func _ready():
 func _input(event):
 	# Mouse Movement-Looking Logic
 	if event is InputEventMouseMotion:
+		mouse_delta = event.relative
 		mouse_input = event.relative
 		if free_looking:
 			neck.rotate_y(deg_to_rad(-event.relative.x * mouse_sens))
@@ -96,6 +98,11 @@ func _input(event):
 		head.rotation.x = clamp(head.rotation.x, deg_to_rad(-89), deg_to_rad(89))
 
 func _physics_process(delta):
+	Global.debug.add_property("MovementSpeed", currentSPEED, 1)
+	Global.debug.add_property("MouseRotation", direction, 2)
+	
+	# Update camera movement based on mouse movement
+#	_update_camera(delta)
 	# Get the input direction and handle the movement/deceleration.
 	var input_dir = Vector2()
 	if Input.is_action_pressed("forward"):
@@ -162,7 +169,9 @@ func _physics_process(delta):
 		free_looking = true
 		
 		if sliding:
-			eyes.rotation.z = lerp(eyes.rotation.z, -deg_to_rad(7.0), delta * lerp_speed)
+			animation_player.play("sliding")
+			var target_tilt = deg_to_rad(7.0 * sign(mouse_delta.x))
+			eyes.rotation.z = lerp(eyes.rotation.z,  target_tilt, delta * lerp_speed)
 		else:
 			eyes.rotation.z = -deg_to_rad(neck.rotation.y * free_look_tilt_amount)
 	else:
@@ -174,6 +183,7 @@ func _physics_process(delta):
 		if not is_on_floor():
 			velocity.y -= gravity * delta
 			
+	
 	# Handle sliding
 	if sliding:
 		slide_timer -= delta
@@ -248,5 +258,5 @@ func _physics_process(delta):
 		velocity.z = move_toward(velocity.z, 0, currentSPEED)
 
 	last_velocity = velocity
-	
 	move_and_slide()
+	
