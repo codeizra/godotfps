@@ -336,17 +336,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, 0)
 [node name="eyes" type="Node3D" parent="player/neck/head"]
 
 [node name="Camera3D" type="Camera3D" parent="player/neck/head/eyes"]
+cull_mask = 1048573
+
+[node name="weapon_holder" type="Node3D" parent="player/neck/head/eyes/Camera3D"]
+transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.06, -0.2, -0.045)
+
+[node name="gun" parent="player/neck/head/eyes/Camera3D/weapon_holder" instance=ExtResource("5_t3yp8")]
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="player/neck/head/eyes"]
 libraries = {
 "": SubResource("AnimationLibrary_26q4a")
 }
-
-[node name="weaponholder" type="Node3D" parent="player/neck/head/eyes"]
-transform = Transform3D(-1, 0, 8.74228e-08, 0, 1, 0, -8.74228e-08, 0, -1, 0.06, -0.2, -0.045)
-
-[node name="Sketchfab_Scene" parent="player/neck/head/eyes/weaponholder" instance=ExtResource("5_t3yp8")]
-visible = false
 
 [node name="UserInterface" type="Control" parent="player"]
 layout_mode = 3

@@ -1,0 +1,32 @@
+[gd_scene load_steps=4 format=3 uid="uid://bl52n5bikbud"]
+
+[ext_resource type="ArrayMesh" uid="uid://cux40ti2riq1t" path="res://assets/meshes/weapons/gun/mesh_arms.res" id="1_7xiye"]
+[ext_resource type="Script" path="res://scripts/init_weapons.gd" id="1_i33cy"]
+[ext_resource type="ArrayMesh" uid="uid://bdh6j63qno28h" path="res://assets/meshes/weapons/gun/mesh_pistol.res" id="2_yat3f"]
+
+[node name="weapons" type="Node3D"]
+script = ExtResource("1_i33cy")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("1_7xiye")
+
+[node name="MeshInstance3D2" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+layers = 2
+cast_shadow = 0
+mesh = ExtResource("2_yat3f")
+
+[node name="MeshInstance3DShadow" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+layers = 2
+cast_shadow = 3
+mesh = ExtResource("1_7xiye")
+
+[node name="MeshInstance3DShadow2" type="MeshInstance3D" parent="."]
+unique_name_in_owner = true
+layers = 2
+cast_shadow = 3
+mesh = ExtResource("2_yat3f")

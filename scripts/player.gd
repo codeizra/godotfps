@@ -9,7 +9,9 @@ extends CharacterBody3D
 @onready var ray_cast_3d = $RayCast3D
 @onready var camera_3d = $neck/head/eyes/Camera3D
 @onready var animation_player = $neck/head/eyes/AnimationPlayer
-@onready var weapon_holder = $neck/head/eyes/weaponholder
+@onready var weapon_holder = $neck/head/eyes/Camera3D/weapon_holder
+
+
 
 # Speed vars
 var currentSPEED = 3.5
