@@ -16,6 +16,8 @@ extends CharacterBody3D
 # Speed vars
 var currentSPEED = 3.5
 
+@export var acceleration : float = 0.1
+@export var deceleration : float = 0.25
 const walkingSPEED = 3.5
 const sprintingSPEED = 7.0
 const crouchingSPEED = 1.0
@@ -82,6 +84,8 @@ var mouse_input = Vector2.ZERO
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
 
 func _ready():
+	Global.player = self
+	
 	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	def_weapon_holder_pos = weapon_holder.position
 	def_weapon_holder_rot = weapon_holder.rotation
@@ -252,12 +256,11 @@ func _physics_process(delta):
 		currentSPEED = (slide_timer + 0.1) * slide_speed 
 		
 	if direction:
-		velocity.x = direction.x * currentSPEED
-		velocity.z = direction.z * currentSPEED
-		
+		velocity.x = lerp(velocity.x, direction.x * currentSPEED, acceleration)
+		velocity.z = lerp(velocity.z, direction.z * currentSPEED, acceleration)
 	else:
-		velocity.x = move_toward(velocity.x, 0, currentSPEED)
-		velocity.z = move_toward(velocity.z, 0, currentSPEED)
+		velocity.x = move_toward(velocity.x, 0, deceleration)
+		velocity.z = move_toward(velocity.z, 0, deceleration)
 
 	last_velocity = velocity
 	move_and_slide()
